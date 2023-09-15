@@ -14,3 +14,9 @@
     COUNT(1) AS num_students
     FROM benn.college_football_players
     GROUP BY 1
+
+
+
+SELECT DISTINCT month, year
+FROM tutorial.aapl_historical_stock_price
+ORDER BY year desc, month desc
