@@ -73,3 +73,14 @@ SELECT permalink, COUNT UNIQUE permalink AS num_comps, COUNT UNIQUE company_perm
     ON companies.permalink = acquisitions.company_permalink
 WHERE state_code IS NOT NULL
 GROUP BY permalink
+
+
+SELECT companies.permalink AS companies_permalink,
+       companies.name AS companies_name,
+       acquisitions.company_permalink AS acquisitions_permalink,
+       acquisitions.acquired_at AS acquired_date
+  FROM tutorial.crunchbase_companies companies
+  LEFT JOIN tutorial.crunchbase_acquisitions acquisitions
+    ON companies.permalink = acquisitions.company_permalink
+   AND acquisitions.company_permalink != '/company/1000memories'
+ ORDER BY 1
