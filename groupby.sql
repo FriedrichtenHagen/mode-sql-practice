@@ -110,3 +110,15 @@ FROM tutorial.crunchbase_investments
 GROUP BY investor_name
 ORDER BY num_invested_companies DESC
 
+/*
+Write a query that joins tutorial.crunchbase_companies and tutorial.crunchbase_investments_part1 using a FULL JOIN. 
+Count up the number of rows that are matched/unmatched as in the example above.
+*/
+SELECT 
+  COUNT(CASE WHEN permalink IS NULL AND investor_permalink IS NOT NULL THEN investor_permalink ELSE NULL END) AS invest_nonmatch,
+  COUNT(CASE WHEN permalink IS NOT NULL AND investor_permalink IS NULL THEN permalink ELSE NULL END) AS company_nonmatch,
+  COUNT(CASE WHEN permalink IS NOT NULL AND investor_permalink IS NOT NULL THEN investor_permalink ELSE NULL END) AS full_match
+FROM tutorial.crunchbase_companies companies
+FULL JOIN tutorial.crunchbase_investments_part1 investments
+  ON companies.permalink = investments.company_permalink
+
