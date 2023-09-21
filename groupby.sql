@@ -165,4 +165,30 @@ SELECT
     company_permalink, company_name, investor_name
 FROM
   tutorial.crunchbase_investments_part1
-WHERE LOWER(company_name) ILIKE 'M%
+WHERE LOWER(company_name) ILIKE 'M%'
+
+
+/*
+Convert the funding_total_usd and founded_at_clean columns in the tutorial.crunchbase_companies_clean_date
+table to strings (varchar format) using a different formatting function for each one.
+ */
+SELECT funding_total_usd::varchar, CAST(founded_at_clean AS varchar)
+  FROM tutorial.crunchbase_companies_clean_date
+
+/*
+ Write a query that counts the number of companies acquired within 3 years, 5 years, 
+ and 10 years of being founded (in 3 separate columns). 
+ Include a column for total companies acquired as well. Group by category and limit to only rows with a founding date.
+ */
+SELECT
+category_code,
+COUNT(CASE WHEN (NOW() - acquired_at_cleaned::timestamp) < INTERVAL '3 years' THEN '1' ELSE NULL END) AS three_years,
+COUNT(CASE WHEN (NOW() - acquired_at_cleaned::timestamp) < INTERVAL '5 years' THEN '1' ELSE NULL END) AS five_years,
+COUNT(CASE WHEN (NOW() - acquired_at_cleaned::timestamp) < INTERVAL '10 years' THEN '1' ELSE NULL END) AS ten_years,
+COUNT(acquirer_permalink) AS total
+FROM
+  tutorial.crunchbase_companies_clean_date companies
+   JOIN tutorial.crunchbase_acquisitions_clean_date acquisitions
+    ON acquisitions.company_permalink = companies.permalink
+    WHERE companies.founded_at_clean IS NOT NULL
+    GROUP BY category_code
