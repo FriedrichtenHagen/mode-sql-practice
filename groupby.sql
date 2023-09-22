@@ -192,3 +192,7 @@ FROM
     ON acquisitions.company_permalink = companies.permalink
     WHERE companies.founded_at_clean IS NOT NULL
     GROUP BY category_code
+
+
+SELECT TRIM(both '()' FROM location) AS trimmed
+FROM tutorial.sf_crime_incidents_2014_01
