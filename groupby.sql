@@ -202,3 +202,25 @@ FROM
        TRIM(leading '(' FROM LEFT(location, POSITION(',' IN location) - 1)) AS lattitude,
        TRIM(trailing ')' FROM RIGHT(location, LENGTH(location) - POSITION(',' IN location) ) ) AS longitude
   FROM tutorial.sf_crime_incidents_2014_01
+
+  /*
+Concatenate the lat and lon fields to form a field that is equivalent to the location field.
+(Note that the answer will have a different decimal precision.)
+ */
+
+  SELECT lat, lon, CONCAT('(', lat, ', ', lon, ')') AS latlon
+  FROM tutorial.sf_crime_incidents_2014_01
+
+  /*
+Create the same concatenated location field, but using the || syntax instead of CONCAT.
+ */
+
+  SELECT lat, lon, CONCAT('(' || lat || ', ' || lon || ')') AS latlon
+  FROM tutorial.sf_crime_incidents_2014_01
+
+  /*
+Write a query that creates a date column formatted YYYY-MM-DD.
+ */
+
+  SELECT date, CONCAT(RIGHT(LEFT(date, 10), 4) || '-' || LEFT(date, 2) || '-' || SUBSTR(date, 4, 2)) AS final_date
+  FROM tutorial.sf_crime_incidents_2014_01
