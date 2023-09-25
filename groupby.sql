@@ -224,3 +224,46 @@ Write a query that creates a date column formatted YYYY-MM-DD.
 
   SELECT date, CONCAT(RIGHT(LEFT(date, 10), 4) || '-' || LEFT(date, 2) || '-' || SUBSTR(date, 4, 2)) AS final_date
   FROM tutorial.sf_crime_incidents_2014_01
+
+  /*
+ Write a query that returns the `category` field, 
+ but with the first letter capitalized and the rest of the letters in lower-case. */
+SELECT
+  category,
+  CONCAT(
+    UPPER(LEFT(category, 1)),
+    LOWER(SUBSTR(category, 2, LENGTH(category)))
+  )
+FROM
+  tutorial.sf_crime_incidents_2014_01
+
+
+/*
+ Write a query that creates an accurate timestamp using the date and time columns in tutorial.sf_crime_incidents_2014_01. 
+ Include a field that is exactly 1 week later as well. 
+ */
+SELECT
+  CONCAT(
+    SUBSTR(date, 7, 4),
+    '-',
+    SUBSTR(date, 1, 2),
+    '-',
+    SUBSTR(date, 4, 2),
+    ' ',
+    time,
+    ':00'
+  ) :: timestamp AS concat_date,
+  CONCAT(
+    SUBSTR(date, 7, 4),
+    '-',
+    SUBSTR(date, 1, 2),
+    '-',
+    SUBSTR(date, 4, 2),
+    ' ',
+    time,
+    ':00'
+  ) :: timestamp + INTERVAL '7DAYS' AS week_date,
+  date,
+  time
+FROM
+  tutorial.sf_crime_incidents_2014_01
