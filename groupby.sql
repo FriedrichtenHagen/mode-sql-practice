@@ -267,3 +267,21 @@ SELECT
   time
 FROM
   tutorial.sf_crime_incidents_2014_01
+
+
+  /*
+Write a query that counts the number of incidents reported by week. Cast the week as a date to get rid of the hours/minutes/seconds.
+ */
+SELECT 
+       DATE_TRUNC('week'   , cleaned_date)::date AS week,
+       COUNT(*) AS num_incidents
+  FROM tutorial.sf_crime_incidents_cleandate
+  GROUP BY week
+  ORDER BY 1
+
+
+  /*
+Write a query that shows exactly how long ago each indicent was reported. Assume that the dataset is in Pacific Standard Time (UTC - 8).
+ */
+  SELECT (NOW() AT TIME ZONE 'PST' - cleaned_date) AS difference, cleaned_date
+  FROM tutorial.sf_crime_incidents_cleandate
