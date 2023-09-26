@@ -285,3 +285,44 @@ Write a query that shows exactly how long ago each indicent was reported. Assume
  */
   SELECT (NOW() AT TIME ZONE 'PST' - cleaned_date) AS difference, cleaned_date
   FROM tutorial.sf_crime_incidents_cleandate
+
+  /*
+Write a query that selects all Warrant Arrests from the tutorial.sf_crime_incidents_2014_01 dataset,
+then wrap it in an outer query that only displays unresolved incidents.
+*/
+
+  
+  
+  SELECT *
+  FROM (
+    SELECT * 
+    FROM tutorial.sf_crime_incidents_2014_01
+    WHERE descript = 'WARRANT ARREST'
+  ) warrant
+  WHERE resolution = 'NONE'
+
+  /*
+ Write a query that displays the average number of monthly incidents for each category. 
+ Hint: use tutorial.sf_crime_incidents_cleandate to make your life a little easier.
+ */
+SELECT
+  category,
+  AVG(incidents)
+FROM
+  (
+    SELECT
+      EXTRACT(
+        MONTH
+        FROM
+          cleaned_date
+      ) AS MONTH,
+      category,
+      COUNT(*) AS incidents
+    FROM
+      tutorial.sf_crime_incidents_cleandate
+    GROUP BY
+      1,
+      2
+  ) sub
+GROUP BY
+  1
