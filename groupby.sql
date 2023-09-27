@@ -326,3 +326,19 @@ FROM
   ) sub
 GROUP BY
   1
+
+
+  /*
+ Write a query that displays all rows from the three categories with the fewest incidents reported.
+*/
+SELECT *
+FROM tutorial.sf_crime_incidents_2014_01 AS one
+  JOIN (
+  SELECT
+ category, COUNT(DISTINCT incidnt_num) AS num_incidents
+FROM
+  tutorial.sf_crime_incidents_2014_01
+GROUP BY 1
+ORDER BY 2
+LIMIT 3
+  ) AS two ON one.category = two.category
