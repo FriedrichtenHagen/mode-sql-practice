@@ -342,3 +342,57 @@ GROUP BY 1
 ORDER BY 2
 LIMIT 3
   ) AS two ON one.category = two.category
+
+/*
+ Write a query that counts the number of companies founded and acquired by quarter starting in Q1 2012. 
+ Create the aggregations in two separate queries, then join them.
+ */
+SELECT
+  COALESCE(acquired_quarter, funded_quarter) AS quarter,
+  acquired_companies,
+  funded_companies
+FROM
+  (
+    SELECT
+      acquired_quarter,
+      COUNT(DISTINCT company_permalink) AS acquired_companies
+    FROM
+      tutorial.crunchbase_acquisitions
+    GROUP BY
+      1
+    ORDER BY
+      1
+  ) acquired
+  FULL JOIN (
+    SELECT
+      funded_quarter,
+      COUNT(DISTINCT company_permalink) AS funded_companies
+    FROM
+      tutorial.crunchbase_investments
+    GROUP BY
+      1
+    ORDER BY
+      1
+  ) funded
+  ON acquired.acquired_quarter = funded.funded_quarter
+
+  /*
+ Write a query that ranks investors from the combined dataset above by the total number of investments they have made.
+ */
+SELECT
+  investor_name, COUNT(DISTINCT company_permalink)
+FROM
+  (
+    SELECT
+      *
+    FROM
+      tutorial.crunchbase_investments_part1
+    UNION
+    ALL
+    SELECT
+      *
+    FROM
+      tutorial.crunchbase_investments_part2
+  ) sub
+  GROUP BY 1
+  ORDER BY 2 DESC
