@@ -420,3 +420,22 @@ JOIN
   WHERE companies.status = 'operating'
   GROUP BY 1
   ORDER BY 2 DESC
+
+
+/*
+SELECT start_terminal,
+       duration_seconds,
+       SUM(duration_seconds) OVER
+         (PARTITION BY start_terminal) AS start_terminal_total
+  FROM tutorial.dc_bikeshare_q1_2012
+ WHERE start_time < '2012-01-08'
+
+Write a query modification of the above example query that shows the duration of each ride
+as a percentage of the total time accrued by riders from each start_terminal */
+SELECT start_terminal,
+       duration_seconds,
+       SUM(duration_seconds) OVER (Partition by start_terminal) AS terminal_total, 
+       SUM(duration_seconds) OVER (Partition by start_terminal ORDER BY start_time) AS running_total,
+      (SUM(duration_seconds) OVER (Partition by start_terminal ORDER BY start_time))/duration_seconds AS start_terminal_percentage
+  FROM tutorial.dc_bikeshare_q1_2012
+ WHERE start_time < '2012-01-08'
